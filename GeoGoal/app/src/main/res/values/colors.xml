@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="light_green">#5A8168</color>
+    <color name="l_green">#59D999</color>
+    <color name="green_bar">#004116</color>
+    <color name="green">#007528</color>
+    <color name="btn_eye">#81DFF6</color>
+    <color name="btn_delete">#FD5F5F</color>
+    <color name="add_goals">#2544A8</color>
+
+</resources>

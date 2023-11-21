@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "7433541537",
+    "project_id": "geogoal-53f68",
+    "storage_bucket": "geogoal-53f68.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:7433541537:android:e78e1310b7671c14261de0",
+        "android_client_info": {
+          "package_name": "devandroid.esther.geogoal"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChgMetfPTuCYVl_AgGXEFC1dgKCz2S7SU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

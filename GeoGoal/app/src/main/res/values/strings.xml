@@ -1,0 +1,49 @@
+<resources>
+    <string name="app_name">GeoGoal</string>
+    <string name="titulo_form_cadastro">Cadastre-se</string>
+    <string name="hint_email">Digite seu e-mail</string>
+    <string name="hint_senha">Digite sua senha</string>
+    <string name="btn_cadastro">Cadastrar</string>
+    <string name="btn_entrar">Login</string>
+    <string name="form_login">Login</string>
+    <string name="texto_tela_cadastro">Não tem conta? Cadastre-se agora mesmo!</string>
+
+    <string name="btnDeslogar">Deslogar</string>
+    <string name="toolbarAddGoal">Adicionar Goal</string>
+    <string name="toolbarUpdateGoal">Update Goal</string>
+    <string name="acessar_perfil">Perfil</string>
+    <string name="title_activity_home2">Home2</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_profile">Profile</string>
+    <string name="menu_history">History</string>
+    <string name="menu_logout">LogOut</string>
+    <string name="texto_recuperarSenha">Recuperar senha</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="txt_log_out">Quer fazer o Log Out?</string>
+
+    <string name="txt_view_goal">GeoGoal: </string>
+    <string name="txt_edit_task">Título da goal aqui</string>
+    <string name="btn_salvar_goal">Salvar Goal</string>
+    <string name="txt_edit_task_desc">Descrição da tarefa aqui</string>
+    <string name="txt_map">Add localização</string>
+    <string name="title_activity_maps">MapsActivity</string>
+
+    //profile
+    <string name="btn_save_profile">Salvar Perfil</string>
+    <string name="txt_profile">Atualizar Perfil</string>
+    <string name="btn_excluir_profile">Excluir dados</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="txt_goal_desc">Description: </string>
+
+    //update goals
+    <string name="txt_toolbar_update">Atualize as goals </string>
+</resources>
