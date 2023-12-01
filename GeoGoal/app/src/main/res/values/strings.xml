@@ -46,4 +46,5 @@
 
     //update goals
     <string name="txt_toolbar_update">Atualize as goals </string>
+    <string name="title_activity_maps2">MapsActivity2</string>
 </resources>
