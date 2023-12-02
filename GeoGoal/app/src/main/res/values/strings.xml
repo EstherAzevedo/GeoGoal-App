@@ -33,7 +33,7 @@
     <string name="txt_edit_task">Título da goal aqui</string>
     <string name="btn_salvar_goal">Salvar Goal</string>
     <string name="txt_edit_task_desc">Descrição da tarefa aqui</string>
-    <string name="txt_map">Add localização</string>
+    <string name="txt_map">Localização</string>
     <string name="title_activity_maps">MapsActivity</string>
 
     //profile

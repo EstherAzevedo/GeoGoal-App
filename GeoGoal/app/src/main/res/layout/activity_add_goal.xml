@@ -79,13 +79,22 @@
                     android:padding="12dp"/>
 
                 <TextView
+                    android:id="@+id/editDescMap"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="16dp"
+                    android:gravity="center"
+                    android:padding="15dp"
+                    android:textSize="16sp"/>
+
+                <Button
                     android:id="@+id/editMap"
                     android:layout_width="200dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:text="@string/txt_map"
                     android:layout_gravity="center"
-                    android:background="@color/add_goals"
+                    android:backgroundTint="@color/add_goals"
                     android:drawableRight="@drawable/ic_add_local"
                     android:padding="15dp"
                     android:textColor="@color/white"

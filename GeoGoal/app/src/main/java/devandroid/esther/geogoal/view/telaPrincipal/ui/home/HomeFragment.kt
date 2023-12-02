@@ -25,7 +25,6 @@ class HomeFragment : Fragment(), GoalsAdapter.GoalItemClickListener {
     private lateinit var goalsAdapter: GoalsAdapter
     private lateinit var databaseReference: DatabaseReference
 
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState:
     Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
@@ -120,6 +119,11 @@ class HomeFragment : Fragment(), GoalsAdapter.GoalItemClickListener {
         // Passar os dados necessários para a UpdateGoals Activity (se necessário)
         intent.putExtra("goalTitle", selectedGoal.title)
         intent.putExtra("goalDescription", selectedGoal.description)
+
+        // Adicionar a LocationData completa
+        selectedGoal.location?.let {
+            intent.putExtra("locationData", it)
+        }
 
         // Iniciar a UpdateGoals Activity
         startActivity(intent)

@@ -1,5 +1,6 @@
 package devandroid.esther.geogoal.view.telaPrincipal.ui.updategoals
 
+import GeocodingService
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -12,7 +13,6 @@ import androidx.appcompat.widget.Toolbar
 import com.google.firebase.database.*
 import devandroid.esther.geogoal.R
 import devandroid.esther.geogoal.view.map.MapsActivity
-import devandroid.esther.geogoal.view.telaPrincipal.ui.addgoals.Task
 
 class UpdateGoals : AppCompatActivity() {
     private lateinit var editTextTaskTitle: EditText
@@ -20,6 +20,12 @@ class UpdateGoals : AppCompatActivity() {
     private lateinit var btnSaveTask: Button
     private lateinit var editMapTextView: TextView
     private lateinit var databaseReference: DatabaseReference
+    private var latitude: Double = 0.0
+    private var longitude: Double = 0.0
+    private val MAP_UPDATE_REQUEST_CODE = 456
+
+    // Instância de GeocodingService
+    private lateinit var geocodingService: GeocodingService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,29 +34,38 @@ class UpdateGoals : AppCompatActivity() {
         // Inicializar a referência ao banco de dados
         databaseReference = FirebaseDatabase.getInstance().getReference("data")
 
-        //configuração da toolbar
+        // Configuração da toolbar
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        // Obter dados passados da Intent
-        val goalTitle = intent.getStringExtra("goalTitle") ?: ""
-        val goalDescription = intent.getStringExtra("goalDescription") ?: ""
 
         // Inicializar os campos de edição
         editTextTaskTitle = findViewById(R.id.editTextTaskTitle)
         editTextDescricao = findViewById(R.id.editTextDescricao)
         btnSaveTask = findViewById(R.id.btnSaveTask)
-        editMapTextView = findViewById(R.id.editMap)
+        editMapTextView = findViewById(R.id.editDescMap)
+        val editMapButton: Button = findViewById(R.id.editMap)
+
+        // Inicializar o GeocodingService com a chave da API do Google Maps
+        geocodingService = GeocodingService(getString(R.string.google_maps_key))
+
+        // Obter dados passados da Intent
+        val goalTitle = intent.getStringExtra("goalTitle") ?: ""
+        val goalDescription = intent.getStringExtra("goalDescription") ?: ""
 
         // Preencher os campos de edição com os dados da meta
         editTextTaskTitle.setText(goalTitle)
         editTextDescricao.setText(goalDescription)
 
-        // Ir para o mapa
-        editMapTextView.setOnClickListener {
+        // Carregar as coordenadas do Firebase
+        loadCoordinatesFromFirebase(goalTitle)
+
+        // Ir para o mapa para atualização
+        editMapButton.setOnClickListener {
             val intent = Intent(this, MapsActivity::class.java)
-            startActivity(intent)
+            intent.putExtra("latitude", latitude)
+            intent.putExtra("longitude", longitude)
+            startActivityForResult(intent, MAP_UPDATE_REQUEST_CODE)
         }
 
         // Atualizar a meta no clique do botão
@@ -61,7 +76,8 @@ class UpdateGoals : AppCompatActivity() {
             // Certifique-se de que o título antigo não está vazio
             if (goalTitle.isNotEmpty()) {
                 // Encontrar a entrada correspondente usando o título antigo
-                val query = databaseReference.child("tasks").orderByChild("title").equalTo(goalTitle)
+                val query =
+                    databaseReference.child("tasks").orderByChild("title").equalTo(goalTitle)
 
                 query.addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -69,25 +85,104 @@ class UpdateGoals : AppCompatActivity() {
                             // Atualizar os valores na entrada correspondente
                             snapshot.ref.child("title").setValue(updatedTitle)
                             snapshot.ref.child("description").setValue(updatedDescription)
+                            snapshot.ref.child("location").child("latitude").setValue(latitude)
+                            snapshot.ref.child("location").child("longitude").setValue(longitude)
 
-                            Toast.makeText(applicationContext, "Meta Atualizada", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                applicationContext,
+                                "Meta Atualizada",
+                                Toast.LENGTH_SHORT
+                            ).show()
                             finish()
                             Log.d("Firebase", "Meta atualizada com sucesso!")
                         }
                     }
 
                     override fun onCancelled(databaseError: DatabaseError) {
-                        Log.e("Firebase", "Erro ao buscar a meta pelo título: ${databaseError.message}")
-                        Toast.makeText(applicationContext, "Erro ao atualizar a meta", Toast.LENGTH_SHORT).show()
+                        Log.e(
+                            "Firebase",
+                            "Erro ao buscar a meta pelo título: ${databaseError.message}"
+                        )
+                        Toast.makeText(
+                            applicationContext,
+                            "Erro ao atualizar a meta",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 })
             }
         }
     }
 
-    //voltar
+        // Método para carregar as coordenadas do Firebase
+    private fun loadCoordinatesFromFirebase(goalTitle: String) {
+        val query = databaseReference.child("tasks").orderByChild("title").equalTo(goalTitle)
+
+        query.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (snapshot in dataSnapshot.children) {
+                    // Obter as coordenadas do Firebase
+                    val locationSnapshot = snapshot.child("location")
+                    latitude = locationSnapshot.child("latitude").getValue(Double::class.java) ?: 0.0
+                    longitude = locationSnapshot.child("longitude").getValue(Double::class.java) ?: 0.0
+
+                    // Atualizar o texto do TextView com as coordenadas
+                    updateMapTextView()
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.e("Firebase", "Erro ao buscar as coordenadas: ${databaseError.message}")
+            }
+        })
+    }
+
+    // Método para atualizar o texto de latitude e longitude
+    private fun updateMapTextView() {
+        // Obter o nome do país usando o GeocodingService
+        geocodingService.getCountryName(latitude, longitude) { countryName ->
+            // Atualizar o TextView com as coordenadas e o nome do país
+            editMapTextView.text =  "País: $countryName\n" +
+                                    "Latitude: $latitude\n" +
+                                    "Longitude: $longitude"
+        }
+    }
+
+    // Método para processar o resultado da atividade do mapa
+    // Método para processar o resultado da atividade do mapa
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            MAP_REQUEST_CODE -> {
+                // Obtém as coordenadas do mapa original
+                latitude = data?.getDoubleExtra("latitude", 0.0) ?: 0.0
+                longitude = data?.getDoubleExtra("longitude", 0.0) ?: 0.0
+
+                // Atualiza o texto do TextView com as coordenadas originais
+                updateMapTextView()
+            }
+            MAP_UPDATE_REQUEST_CODE -> {
+                // Obtém as novas coordenadas do mapa de atualização
+                val newLatitude = data?.getDoubleExtra("latitude", 0.0) ?: 0.0
+                val newLongitude = data?.getDoubleExtra("longitude", 0.0) ?: 0.0
+
+                // Atualiza as variáveis de latitude e longitude
+                latitude = newLatitude
+                longitude = newLongitude
+
+                // Atualiza o texto do TextView com as novas coordenadas
+                updateMapTextView()
+            }
+        }
+    }
+
+    // Voltar
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
+    }
+
+    companion object {
+        private const val MAP_REQUEST_CODE = 123
     }
 }
