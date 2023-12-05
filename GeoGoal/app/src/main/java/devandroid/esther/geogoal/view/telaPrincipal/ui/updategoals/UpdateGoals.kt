@@ -114,7 +114,7 @@ class UpdateGoals : AppCompatActivity() {
         }
     }
 
-        // Método para carregar as coordenadas do Firebase
+    // Método para carregar as coordenadas do Firebase
     private fun loadCoordinatesFromFirebase(goalTitle: String) {
         val query = databaseReference.child("tasks").orderByChild("title").equalTo(goalTitle)
 
@@ -139,39 +139,33 @@ class UpdateGoals : AppCompatActivity() {
 
     // Método para atualizar o texto de latitude e longitude
     private fun updateMapTextView() {
-        // Obter o nome do país usando o GeocodingService
-        geocodingService.getCountryName(latitude, longitude) { countryName ->
-            // Atualizar o TextView com as coordenadas e o nome do país
-            editMapTextView.text =  "País: $countryName\n" +
-                                    "Latitude: $latitude\n" +
-                                    "Longitude: $longitude"
+        // Obter o nome do país e da cidade usando o GeocodingService
+        geocodingService.getCountryAndCityName(latitude, longitude) { countryName, cityName ->
+            // Atualizar o TextView com as coordenadas, nome do país e nome da cidade
+            editMapTextView.text = "País: $countryName\nCidade: $cityName\n" +
+                    "Latitude: $latitude\nLongitude: $longitude"
         }
     }
 
     // Método para processar o resultado da atividade do mapa
-    // Método para processar o resultado da atividade do mapa
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
-            MAP_REQUEST_CODE -> {
-                // Obtém as coordenadas do mapa original
-                latitude = data?.getDoubleExtra("latitude", 0.0) ?: 0.0
-                longitude = data?.getDoubleExtra("longitude", 0.0) ?: 0.0
-
-                // Atualiza o texto do TextView com as coordenadas originais
-                updateMapTextView()
-            }
             MAP_UPDATE_REQUEST_CODE -> {
                 // Obtém as novas coordenadas do mapa de atualização
                 val newLatitude = data?.getDoubleExtra("latitude", 0.0) ?: 0.0
                 val newLongitude = data?.getDoubleExtra("longitude", 0.0) ?: 0.0
 
+                // Obtém o nome do país e da cidade usando o GeocodingService
+                geocodingService.getCountryAndCityName(newLatitude, newLongitude) { countryName, cityName ->
+                    // Atualiza o texto do TextView com as novas coordenadas, nome do país e nome da cidade
+                    editMapTextView.text = "País: $countryName\nCidade: $cityName\n" +
+                            "Latitude: $newLatitude\nLongitude: $newLongitude"
+                }
+
                 // Atualiza as variáveis de latitude e longitude
                 latitude = newLatitude
                 longitude = newLongitude
-
-                // Atualiza o texto do TextView com as novas coordenadas
-                updateMapTextView()
             }
         }
     }
@@ -183,6 +177,6 @@ class UpdateGoals : AppCompatActivity() {
     }
 
     companion object {
-        private const val MAP_REQUEST_CODE = 123
+        private const val MAP_UPDATE_REQUEST_CODE = 456
     }
 }

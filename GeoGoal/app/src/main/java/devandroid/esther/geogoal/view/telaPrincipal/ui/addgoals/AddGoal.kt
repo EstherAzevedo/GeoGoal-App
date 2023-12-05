@@ -59,12 +59,11 @@ class AddGoal : AppCompatActivity() {
                 val latitude = data?.getDoubleExtra("latitude", 0.0) ?: 0.0
                 val longitude = data?.getDoubleExtra("longitude", 0.0) ?: 0.0
 
-                // Obter o nome do país usando o GeocodingService
-                geocodingService.getCountryName(latitude, longitude) { countryName ->
-                    // Atualiza o texto do TextView com as coordenadas e o nome do país
-                    editDescMap.text ="País: $countryName\n" +
-                            "Latitude: $latitude\n" +
-                            "Longitude: $longitude"
+                // Obter o nome do país e da cidade usando o GeocodingService
+                geocodingService.getCountryAndCityName(latitude, longitude) { countryName, cityName ->
+                    // Atualiza o texto do TextView com as coordenadas, nome do país e nome da cidade
+                    editDescMap.text = "País: $countryName\nCidade: $cityName\n" +
+                            "Latitude: $latitude\nLongitude: $longitude"
                     // Atualiza a variável selectedLocation
                     selectedLocation = LatLng(latitude, longitude)
                 }
@@ -108,9 +107,10 @@ class AddGoal : AppCompatActivity() {
             val latitude = data?.getDoubleExtra("latitude", 0.0) ?: 0.0
             val longitude = data?.getDoubleExtra("longitude", 0.0) ?: 0.0
             val country = data?.getStringExtra("country")
+            val city = data?.getStringExtra("city")
 
-            // Atualiza o texto do TextView com as coordenadas
-            editDescMap.text = "Latitude: $latitude, Longitude: $longitude, País: $country"
+            // Atualiza o texto do TextView com as coordenadas, nome do país e nome da cidade
+            editDescMap.text = "Latitude: $latitude, Longitude: $longitude, País: $country, Cidade: $city"
         }
     }
 

@@ -22,4 +22,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="16sp"/>
+
+    <Button
+        android:id="@+id/btnPhotoGallery"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="16dp"
+        android:text="Suas fotos de viagem"
+        android:drawableRight="@drawable/ic_camera" />
+
 </LinearLayout>

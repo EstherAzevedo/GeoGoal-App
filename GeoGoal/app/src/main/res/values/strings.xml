@@ -43,6 +43,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="txt_goal_desc">Description: </string>
+    <string name="toolbarPhotos">Fotos de viagem</string>
 
     //update goals
     <string name="txt_toolbar_update">Atualize as goals </string>

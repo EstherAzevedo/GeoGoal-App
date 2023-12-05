@@ -1,4 +1,5 @@
 package devandroid.esther.geogoal.view.telaPrincipal.ui.history
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import devandroid.esther.geogoal.R
 import devandroid.esther.geogoal.view.telaPrincipal.ui.addgoals.Task
+import devandroid.esther.geogoal.view.telaPrincipal.ui.gallery.GalleryActivity
 
 class GoalsCompletedAdapter(private val completedGoals: List<Task>) :
     RecyclerView.Adapter<GoalsCompletedAdapter.CompletedGoalsViewHolder>() {
@@ -20,6 +22,13 @@ class GoalsCompletedAdapter(private val completedGoals: List<Task>) :
     override fun onBindViewHolder(holder: CompletedGoalsViewHolder, position: Int) {
         val currentGoal = completedGoals[position]
         holder.bind(currentGoal)
+
+        // Adicionar OnClickListener para o botão dentro de cada item
+        holder.itemView.findViewById<Button>(R.id.btnPhotoGallery).setOnClickListener {
+            val context = holder.itemView.context
+            val intent = Intent(context, GalleryActivity::class.java)
+            context.startActivity(intent)
+        }
     }
 
     override fun getItemCount(): Int {
